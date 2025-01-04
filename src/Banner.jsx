@@ -1,6 +1,5 @@
 import { styled } from "styled-components";
 import banner from "/banner.jpg";
-import "./Banner.css";
 
 const BannerContainer = styled.div`
   margin: 1rem;
@@ -9,7 +8,7 @@ const BannerContainer = styled.div`
 export default function Banner() {
   return (
     <BannerContainer>
-      <img src={banner} className="banner" />
+      <img src={banner} style={{ width: "100%" }} />
     </BannerContainer>
   );
 }

@@ -24,7 +24,10 @@ const Button = styled.button`
 
 export default function CategoryButton({ children, isActive, onClick }) {
   return (
-    <Button className={isActive ? "active" : ""} onClick={onClick}>
+    <Button
+      className={isActive ? "active" : ""}
+      onClick={() => onClick(children)}
+    >
       {children}
     </Button>
   );

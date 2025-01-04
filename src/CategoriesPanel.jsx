@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import CategoryButton from "./CategoryButton";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const PanelContainer = styled.div`
   display: flex;
@@ -8,6 +8,11 @@ const PanelContainer = styled.div`
   padding: 10px;
   overflow-x: auto; /* Пролистывание по горизонтали */
   white-space: nowrap; /* Запрещаем перенос элементов */
+  cursor: grab; /* Указываем, что элемент можно перетаскивать */
+
+  &:active {
+    cursor: grabbing; /* Смена курсора во время перетаскивания */
+  }
 
   /* Скрытие скроллбара */
   scrollbar-width: none; /* Скрывает скроллбар в Firefox */
@@ -21,6 +26,11 @@ const PanelContainer = styled.div`
 export default function CategoriesPanel() {
   const [activeCategory, setActiveCategory] = useState(null);
 
+  const handleCategoryClick = (category) => {
+    setActiveCategory(category);
+    console.log(category);
+  };
+
   const categories = [
     "Новинки",
     "Популярное",
@@ -32,13 +42,35 @@ export default function CategoriesPanel() {
     "Разное",
   ];
 
-  const handleCategoryClick = (category) => {
-    setActiveCategory(category);
-    console.log(category);
-  };
+  const panelRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+
+  function handleMouseDown(event) {
+    setIsDragging(true);
+    setStartX(event.pageX);
+    event.preventDefault();
+  }
+
+  function handleMouseMove(event) {
+    if (isDragging) {
+      const changex = (event.pageX - startX) / 10;
+      panelRef.current.scrollLeft = panelRef.current.scrollLeft - changex;
+    }
+  }
+
+  function handleMouseUpOrLeave() {
+    setIsDragging(false);
+  }
 
   return (
-    <PanelContainer>
+    <PanelContainer
+      ref={panelRef}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUpOrLeave}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseUpOrLeave}
+    >
       {categories.map((category) => (
         <CategoryButton
           key={category}
