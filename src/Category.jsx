@@ -3,16 +3,17 @@ import Type from "./Type";
 import TypesPanel from "./TypesPanel";
 
 export default function Category({ category }) {
-  const [types, setTypes] = useState(category.types);
+  const [types, setTypes] = useState(category.types); // какие типы сейчас выводятся для категории
 
-  function changeTypes(typeTitle) {
+  const changeTypes = (typeTitle) => {
+    // меняем тип, который выводится
     if (typeTitle == "Все") {
       setTypes(category.types);
     } else {
       const tip = category.types.find((type) => type.title === typeTitle);
       setTypes([tip]);
     }
-  }
+  };
 
   return (
     <>

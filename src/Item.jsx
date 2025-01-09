@@ -62,8 +62,8 @@ const AddButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 3rem;
+  height: 3rem;
 
   &:hover {
     background-color: #1b254b;

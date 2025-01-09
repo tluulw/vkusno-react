@@ -1,7 +1,7 @@
 import Banner from "./Banner";
 import Header from "./Header/Header";
 import CategoriesPanel from "./CategoriesPanel";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Category from "./Category";
 
 export default function App() {
@@ -45,18 +45,42 @@ export default function App() {
     getCategoriesAndItems();
   }, []);
 
+  const categoryRefs = useRef({}); // здесь храним ссылки на все категории, чтоб с ними можно было взаимодействовать
+
+  const scrollToCategory = (id) => {
+    // проматываемся к категориям
+    if (categoryRefs.current[id]) {
+      // если ссылочка рабочая
+      const headerHeight = 50; // высота хедера
+      const elementTop =
+        categoryRefs.current[id].getBoundingClientRect().top + window.scrollY; // топ нашей категории
+
+      window.scrollTo({
+        top: elementTop - headerHeight, // скролим до категории - хедер, чтоб было видно название
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <>
       <Header />
       <Banner />
       <h1>Наше меню</h1>
       {isReqLoading && <div>Loading...</div>}
-      {!isReqLoading && <CategoriesPanel categories={categories} />}
+      {!isReqLoading && (
+        <CategoriesPanel categories={categories} onClick={scrollToCategory} />
+      )}
       {!isReqLoading && (
         <>
           {items.map((category) => (
-            // вывод названия категории
-            <Category key={category.id} category={category} />
+            <div
+              key={category.id}
+              ref={(el) => (categoryRefs.current[category.id] = el)}
+              data-category-id={category.id}
+            >
+              <Category category={category} />
+            </div>
           ))}
         </>
       )}

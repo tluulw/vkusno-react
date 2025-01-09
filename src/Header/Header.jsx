@@ -40,7 +40,15 @@ export default function Header() {
       <IconButton>
         <SearchIcon />
       </IconButton>
-      <IconButton>
+      <IconButton
+        onClick={() =>
+          // при нажатии на лого мотаемся на самый верх
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          })
+        }
+      >
         <Logo />
       </IconButton>
       <IconButton>

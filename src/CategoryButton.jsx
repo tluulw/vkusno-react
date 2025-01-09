@@ -1,9 +1,8 @@
 import { styled } from "styled-components";
 
 const Button = styled.button`
-  padding: 10px 20px;
-  margin: 5px;
-  font-size: 16px;
+  padding: 0.7rem 1.2rem;
+  font-size: 1rem;
   font-weight: 500;
   color: #ffffff;
   background-color: #2c365e;
@@ -26,9 +25,9 @@ export default function CategoryButton({ children, isActive, onClick }) {
   return (
     <Button
       className={isActive ? "active" : ""}
-      onClick={() => onClick(children)}
+      onClick={() => onClick(children.id)}
     >
-      {children}
+      {children.title}
     </Button>
   );
 }

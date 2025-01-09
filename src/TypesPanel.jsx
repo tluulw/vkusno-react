@@ -38,6 +38,7 @@ export default function TypesPanel({ types, onClick }) {
   const [activeType, setActiveType] = useState("Все");
 
   const handleTypeClick = (type) => {
+    // меняем тип, который выводится для категории
     setActiveType(type);
     onClick(type);
   };
