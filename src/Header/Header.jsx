@@ -21,15 +21,16 @@ const HeaderContainer = styled.header`
 
 const IconButton = styled.button`
   color: white;
-  margin: 1rem;
+  margin: 0.7rem;
   background-color: transparent;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
+  transition: color 0.3s;
 
   &:hover {
-    color: #d5dcf9;
+    color: #007bff;
   }
 `;
 

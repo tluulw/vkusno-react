@@ -1,11 +1,10 @@
 import { styled } from "styled-components";
 import CategoryButton from "./CategoryButton";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const PanelContainer = styled.div`
   display: flex;
   gap: 10px;
-  padding: 10px;
   overflow-x: auto; /* Пролистывание по горизонтали */
   white-space: nowrap; /* Запрещаем перенос элементов */
   cursor: grab; /* Указываем, что элемент можно перетаскивать */
@@ -23,24 +22,12 @@ const PanelContainer = styled.div`
   }
 `;
 
-export default function CategoriesPanel() {
-  const [activeCategory, setActiveCategory] = useState(null);
+export default function CategoriesPanel({ categories }) {
+  const [activeCategory, setActiveCategory] = useState("Новинки");
 
   const handleCategoryClick = (category) => {
     setActiveCategory(category);
-    console.log(category);
   };
-
-  const categories = [
-    "Новинки",
-    "Популярное",
-    "Напитки",
-    "Бургеры",
-    "Снеки",
-    "Кафе",
-    "Дессерты",
-    "Разное",
-  ];
 
   const panelRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -54,7 +41,7 @@ export default function CategoriesPanel() {
 
   function handleMouseMove(event) {
     if (isDragging) {
-      const changex = (event.pageX - startX) / 10;
+      const changex = (event.pageX - startX) / 50;
       panelRef.current.scrollLeft = panelRef.current.scrollLeft - changex;
     }
   }
@@ -64,22 +51,24 @@ export default function CategoriesPanel() {
   }
 
   return (
-    <PanelContainer
-      ref={panelRef}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUpOrLeave}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseUpOrLeave}
-    >
-      {categories.map((category) => (
-        <CategoryButton
-          key={category}
-          isActive={activeCategory === category}
-          onClick={handleCategoryClick}
-        >
-          {category}
-        </CategoryButton>
-      ))}
-    </PanelContainer>
+    <>
+      <PanelContainer
+        ref={panelRef}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUpOrLeave}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseUpOrLeave}
+      >
+        {categories.map((category) => (
+          <CategoryButton
+            key={category.id}
+            isActive={activeCategory === category.title}
+            onClick={handleCategoryClick}
+          >
+            {category.title}
+          </CategoryButton>
+        ))}
+      </PanelContainer>
+    </>
   );
 }
