@@ -63,6 +63,7 @@ export default function CategoriesPanel({
   categories,
   onClick,
   activeCategory,
+  buttonRefs,
 }) {
   const panelRef = useRef(null); // реф для панели категорий
   const [isDragging, setIsDragging] = useState(false); // перетаскивается панель или нет
@@ -126,6 +127,7 @@ export default function CategoriesPanel({
         {categories.map((category) => (
           <CategoryButton
             key={category.id}
+            ref={(el) => (buttonRefs.current[category.id] = el)} // сохраняем реф для каждой кнопки
             className={activeCategory === category.id ? "active" : ""}
             onClick={() => onClick(category.id)}
           >

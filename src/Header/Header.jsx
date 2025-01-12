@@ -34,21 +34,13 @@ const IconButton = styled.button`
   }
 `;
 
-export default function Header() {
+export default function Header({ onClick }) {
   return (
     <HeaderContainer>
       <IconButton>
         <SearchIcon />
       </IconButton>
-      <IconButton
-        onClick={() =>
-          // при нажатии на лого мотаемся на самый верх
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          })
-        }
-      >
+      <IconButton onClick={() => onClick(0)}>
         <Logo />
       </IconButton>
       <IconButton>

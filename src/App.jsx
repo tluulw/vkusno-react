@@ -26,21 +26,47 @@ export default function App() {
   const categoryRefs = useRef({}); // ссылки на категории
   const observer = useRef(null); // сам IntersectionObserver
   const [activeCategory, setActiveCategory] = useState(1); // активная категория
+  const buttonRefs = useRef({}); // рефки для категорий в панели
+  const isScrolling = useRef(false);
 
-  const handleCategoryClick = (id) => {
+  const changeCategory = (id) => {
     // при клике меняем активную категорию и скроллим
     setActiveCategory(id);
-    if (categoryRefs.current[id]) {
-      const headerHeight = 50; // высота хедера
-      const categoriesPanelHeight = 41;
-      const elementTop =
-        categoryRefs.current[id].getBoundingClientRect().top + window.scrollY;
 
-      window.scrollTo({
-        top: elementTop - headerHeight - categoriesPanelHeight,
+    // Прокрутка панели с категориями
+    if (buttonRefs.current[id]) {
+      buttonRefs.current[id].scrollIntoView({
         behavior: "smooth",
+        inline: "center", // Центрируем кнопку в панели
       });
     }
+  };
+
+  const handleCategoryClick = (id) => {
+    isScrolling.current = true;
+    // при нажатии на лого
+    if (id == 0) {
+      changeCategory(1);
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    } else {
+      changeCategory(id);
+      if (categoryRefs.current[id]) {
+        const headerHeight = 50; // высота хедера
+        const categoriesPanelHeight = 41;
+        const elementTop =
+          categoryRefs.current[id].getBoundingClientRect().top + window.scrollY;
+
+        window.scrollTo({
+          top: elementTop - headerHeight - categoriesPanelHeight,
+          behavior: "smooth",
+        });
+      }
+    }
+    setTimeout(() => (isScrolling.current = false), 1500);
   };
 
   useEffect(() => {
@@ -70,7 +96,9 @@ export default function App() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const categoryId = entry.target.dataset.categoryId; // Получаем id категории
-          setActiveCategory(Number(categoryId)); // Устанавливаем активную категорию
+          {
+            !isScrolling && setActiveCategory(Number(categoryId));
+          } // Устанавливаем активную категорию
         }
       });
     };
@@ -101,7 +129,7 @@ export default function App() {
 
   return (
     <>
-      <Header />
+      <Header onClick={handleCategoryClick} />
       <Banner />
       <h1>Наше меню</h1>
       {isReqLoading && <div>Loading...</div>}
@@ -110,6 +138,7 @@ export default function App() {
           categories={categories}
           onClick={handleCategoryClick}
           activeCategory={activeCategory}
+          buttonRefs={buttonRefs}
         />
       )}
       {!isReqLoading && (
