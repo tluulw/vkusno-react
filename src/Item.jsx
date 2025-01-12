@@ -78,6 +78,7 @@ export default function Item({ item, onAddToCart }) {
       <Title>{item.title}</Title>
       <InfoRow>
         <Price>от {itemSize.price} ₽</Price>
+        <div>Id: {item.id}</div>
         <AddButton onClick={onAddToCart}>+</AddButton>
       </InfoRow>
     </ItemContainer>

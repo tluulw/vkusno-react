@@ -1,11 +1,11 @@
 import { styled } from "styled-components";
-import CategoryButton from "./CategoryButton";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 const PanelContainer = styled.div`
-  margin: 0 0.5rem;
   display: flex;
-  gap: 10px;
+  background-color: #ffffff;
+  gap: 1rem;
+  padding: 0 0.5rem;
   overflow-x: auto; /* Пролистывание по горизонтали */
   white-space: nowrap; /* Запрещаем перенос элементов */
   cursor: grab; /* Указываем, что элемент можно перетаскивать */
@@ -21,58 +21,115 @@ const PanelContainer = styled.div`
   &::-webkit-scrollbar {
     display: none; /* Скрывает скроллбар в WebKit-браузерах (Chrome, Safari) */
   }
+
+  &.fixed {
+    position: fixed;
+    z-index: 100;
+    top: 50px;
+    left: 0;
+    right: 0;
+  }
 `;
 
-export default function CategoriesPanel({ categories, onClick }) {
-  const [activeCategory, setActiveCategory] = useState(1); // храним айди активной категории
+const CategoryButton = styled.button`
+  padding: 0.7rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap; /* Текст не переносится */
+  transition: color 0.3s;
 
-  const handleCategoryClick = (id) => {
-    // меняем активную категорию и делаем к ней скролл
-    setActiveCategory(id);
+  &:hover {
+    color: #555;
+  }
 
-    onClick(id);
-  };
+  &:focus {
+    outline: none;
+  }
 
-  const panelRef = useRef(null); // реф для панели категорий, чтоб можно было её листать
+  &.active {
+    font-weight: bold;
+  }
+`;
+
+const Placeholder = styled.div`
+  height: ${(props) => (props.isFixed ? "40px" : "1px")}; /* Высота панели */
+`;
+
+export default function CategoriesPanel({
+  categories,
+  onClick,
+  activeCategory,
+}) {
+  const panelRef = useRef(null); // реф для панели категорий
   const [isDragging, setIsDragging] = useState(false); // перетаскивается панель или нет
   const [startX, setStartX] = useState(0); // положение панели до перетаскивания
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   const handleMouseDown = (event) => {
-    // фиксируем вводные, когда хотим перетащить панель
+    // Начало перетаскивания
     setIsDragging(true);
-    setStartX(event.pageX);
+    setStartX(event.pageX - panelRef.current.offsetLeft);
+    setScrollLeft(panelRef.current.scrollLeft);
     event.preventDefault();
   };
 
   const handleMouseMove = (event) => {
-    // двигаем панель
-    if (isDragging) {
-      const changex = (event.pageX - startX) / 50;
-      panelRef.current.scrollLeft = panelRef.current.scrollLeft - changex;
-    }
+    // Перемещение панели
+    if (!isDragging) return;
+    const x = event.pageX - panelRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5; // коэффициент скорости
+    panelRef.current.scrollLeft = scrollLeft - walk;
   };
 
   const handleMouseUpOrLeave = () => {
-    // прекращаем двигать панель
+    // Завершение перетаскивания
     setIsDragging(false);
   };
 
+  const placeHolderRef = useRef(null); // реф для заместителя панели категорий
+  const [isFixed, setIsFixed] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsFixed(!entry.isIntersecting);
+      },
+      { root: null, threshold: 1, rootMargin: "-50px 0px 0px 0px" }
+    );
+
+    if (placeHolderRef.current) {
+      observer.observe(placeHolderRef.current);
+    }
+
+    return () => {
+      if (placeHolderRef.current) {
+        observer.unobserve(placeHolderRef.current);
+      }
+    };
+  }, []);
+
   return (
     <>
+      <Placeholder ref={placeHolderRef} isFixed={isFixed} />
       <PanelContainer
         ref={panelRef}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUpOrLeave}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseUpOrLeave}
+        className={isFixed && "fixed"}
       >
         {categories.map((category) => (
           <CategoryButton
             key={category.id}
-            isActive={activeCategory === category.id}
-            onClick={handleCategoryClick}
+            className={activeCategory === category.id ? "active" : ""}
+            onClick={() => onClick(category.id)}
           >
-            {category}
+            {category.title}
           </CategoryButton>
         ))}
       </PanelContainer>
