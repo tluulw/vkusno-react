@@ -4,10 +4,19 @@ body {
   margin: 0;
   color: black;
   padding-top: 50px;
+  background-color: #ffffff;
+
+  &::-webkit-scrollbar {
+    display: none; /* Скрывает скроллбар в WebKit-браузерах (Chrome, Safari) */
+  }
 }
 
 h1 {
   margin: 0.7rem 0;
   display: flex;
   justify-content: center;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
 }

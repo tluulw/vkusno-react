@@ -7,18 +7,12 @@ const TypeContainer = styled.div`
   justify-content: space-around;
 `;
 
-export default function Type({ items }) {
+export default function Type({ items, onItemClick }) {
   return (
     <>
       <TypeContainer>
         {items.map((item) => (
-          <Item
-            key={item.id}
-            item={item}
-            onAddToCart={() => {
-              return;
-            }}
-          />
+          <Item key={item.id} item={item} onItemClick={onItemClick} />
         ))}
       </TypeContainer>
     </>

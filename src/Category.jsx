@@ -2,7 +2,7 @@ import { useState } from "react";
 import Type from "./Type";
 import TypesPanel from "./TypesPanel";
 
-export default function Category({ category }) {
+export default function Category({ category, onItemClick }) {
   const [types, setTypes] = useState(category.types); // какие типы сейчас выводятся для категории
 
   const changeTypes = (typeTitle) => {
@@ -23,7 +23,7 @@ export default function Category({ category }) {
         onClick={changeTypes}
       />
       {types.map((type) => (
-        <Type key={type.id} items={type.items} />
+        <Type key={type.id} items={type.items} onItemClick={onItemClick} />
       ))}
     </>
   );

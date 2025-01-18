@@ -55,9 +55,7 @@ const CategoryButton = styled.button`
   }
 `;
 
-const Placeholder = styled.div`
-  height: ${(props) => (props.isFixed ? "40px" : "1px")}; /* Высота панели */
-`;
+const Placeholder = styled.div``;
 
 export default function CategoriesPanel({
   categories,
@@ -115,7 +113,10 @@ export default function CategoriesPanel({
 
   return (
     <>
-      <Placeholder ref={placeHolderRef} isFixed={isFixed} />
+      <Placeholder
+        ref={placeHolderRef}
+        style={{ height: isFixed ? "40px" : "1px" }}
+      />
       <PanelContainer
         ref={panelRef}
         onMouseDown={handleMouseDown}

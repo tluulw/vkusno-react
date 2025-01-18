@@ -1,11 +1,11 @@
 import { styled } from "styled-components";
 
-const ItemContainer = styled.div`
+const ItemContainer = styled.a`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 12rem;
-  margin: 1rem 0.5rem 1rem 1rem;
+  width: 35%;
+  margin: 0.5rem;
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -29,7 +29,7 @@ const Image = styled.img`
 const Title = styled.h3`
   font-size: 1rem;
   font-weight: 600;
-  color: #333333;
+  color: #000000;
   margin: 0;
   text-align: center;
   margin-bottom: 0.5rem;
@@ -45,7 +45,7 @@ const InfoRow = styled.div`
 const Price = styled.span`
   font-size: 1rem;
   font-weight: 500;
-  color: #2c365e;
+  color: #000000;
 `;
 
 const AddButton = styled.button`
@@ -70,15 +70,15 @@ const AddButton = styled.button`
   }
 `;
 
-export default function Item({ item, onAddToCart }) {
+export default function Item({ item, onItemClick }) {
   const itemSize = item.sizes[0];
   return (
-    <ItemContainer>
+    <ItemContainer onClick={() => onItemClick(item)}>
       <Image src={itemSize.image} alt={item.title} />
       <Title>{item.title}</Title>
       <InfoRow>
         <Price>от {itemSize.price} ₽</Price>
-        <AddButton onClick={onAddToCart}>+</AddButton>
+        <AddButton onClick={() => onItemClick(item)}>+</AddButton>
       </InfoRow>
     </ItemContainer>
   );
