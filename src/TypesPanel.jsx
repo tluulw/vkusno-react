@@ -16,7 +16,7 @@ const TypeButton = styled.button`
   border: none;
   font-size: 1rem;
   font-weight: normal;
-  color: #000000;
+  color: #aaa;
   cursor: pointer;
   transition: color 0.3s;
 
@@ -30,6 +30,7 @@ const TypeButton = styled.button`
 
   &.active {
     font-weight: bold;
+    color: #000;
   }
 `;
 

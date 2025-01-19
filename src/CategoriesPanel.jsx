@@ -35,7 +35,7 @@ const CategoryButton = styled.button`
   padding: 0.7rem 1.2rem;
   font-size: 1rem;
   font-weight: 500;
-  color: #000000;
+  color: #aaa;
   background: none;
   border: none;
   cursor: pointer;
@@ -52,6 +52,7 @@ const CategoryButton = styled.button`
 
   &.active {
     font-weight: bold;
+    color: #000;
   }
 `;
 

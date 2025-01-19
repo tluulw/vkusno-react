@@ -113,14 +113,15 @@ const SizeButtons = styled.div`
 `;
 
 const SizeButton = styled.button`
-  padding: 0.7rem 1.2rem;
-  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  max-width: 30vw;
+  font-size: 0.8rem;
   font-weight: 500;
-  color: #000000;
-  background: none;
-  border: none;
+  color: #aaa;
+  background-color: #eee;
+  border-radius: 8px;
+  border: 1px solid #2c365e;
   cursor: pointer;
-  white-space: nowrap; /* Текст не переносится */
   transition: color 0.3s;
   &:hover {
     color: #555;
@@ -130,7 +131,7 @@ const SizeButton = styled.button`
   }
   &.active {
     font-weight: bold;
-    color: red;
+    color: #000;
   }
 `;
 
@@ -151,7 +152,7 @@ const Footer = styled.div`
 const QuantityControls = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
 `;
 
 const QuantityButton = styled.button`
@@ -187,9 +188,10 @@ const QuantityDisplay = styled.span`
 const AddToCartButton = styled.button`
   background-color: #2c365e;
   color: #ffffff;
-  font-size: 1.2rem;
+  max-width: 60vw;
+  font-size: 1.1rem;
   font-weight: 500;
-  padding: 0.5rem 2rem;
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -226,7 +228,12 @@ export default function ItemModal({ isOpen, onClose, item }) {
       size: selectedSize,
       quantity,
     });
-    onClose(); // Закрываем модалку после добавления
+    closeModal(); // Закрываем модалку после добавления
+  };
+
+  const closeModal = () => {
+    document.getElementById("modal").classList.add("closing");
+    setTimeout(onClose, 350);
   };
 
   // Отключаем скролл при открытии модального окна
@@ -244,14 +251,14 @@ export default function ItemModal({ isOpen, onClose, item }) {
 
   return (
     <ModalOverlay>
-      <Modal>
+      <Modal id="modal">
         <ModalContent>
           <ModalHeader>
             <ModalImage src={selectedSize.image} alt={item.title} />
             <ModalTitleContainer>
               <ModalTitle>{item.title}</ModalTitle>
             </ModalTitleContainer>
-            <CloseButton onClick={onClose}>&times;</CloseButton>
+            <CloseButton onClick={closeModal}>&times;</CloseButton>
           </ModalHeader>
 
           <ModalBody>
@@ -263,7 +270,7 @@ export default function ItemModal({ isOpen, onClose, item }) {
                     className={selectedSize === size ? "active" : ""}
                     onClick={() => handleSizeChange(size)}
                   >
-                    {size.size}
+                    {size.size} {size.price}р.
                   </SizeButton>
                 ))}
               </SizeButtons>
