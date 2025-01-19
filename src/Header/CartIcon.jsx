@@ -5,12 +5,13 @@ const CartIconContainer = styled.svg`
   height: 24px;
 `;
 
-export default function CartIcon() {
+export default function CartIcon({ visible }) {
   return (
     <CartIconContainer
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="none"
+      color={visible ? "#fff" : "#2c365e"}
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"

@@ -55,15 +55,15 @@ const AddButton = styled.button`
   font-weight: 600;
   padding: 0.5rem;
   border: none;
-  border-radius: 50%;
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
 
   &:hover {
     background-color: #1b254b;

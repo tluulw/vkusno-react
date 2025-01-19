@@ -1,31 +1,47 @@
 import { useState, useEffect } from "react";
 import { styled, keyframes } from "styled-components";
+import { useCart } from "./Cart/CartContext";
 
 // Анимация для появления модального окна
-const slideUp = keyframes`
+const slideIn = keyframes`
   from {
     transform: translateY(100%);
-    opacity: 0;
   }
   to {
     transform: translateY(0);
-    opacity: 1;
   }
 `;
 
 // Анимация для закрытия модального окна
-const slideDown = keyframes`
+const slideOut = keyframes`
   from {
     transform: translateY(0);
-    opacity: 1;
   }
   to {
     transform: translateY(100%);
+  }
+`;
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
     opacity: 0;
   }
 `;
 
 const ModalOverlay = styled.div`
+  animation: ${fadeIn} 0.3s ease-out;
   background-color: rgba(0, 0, 0, 0.7); /* Фон оверлея */
   position: fixed;
   top: 0;
@@ -33,10 +49,14 @@ const ModalOverlay = styled.div`
   right: 0;
   bottom: 0;
   z-index: 999;
+
+  &.closing {
+    animation: ${fadeOut} 0.3s ease-out;
+  }
 `;
 
 const Modal = styled.div`
-  animation: ${slideUp} 0.4s ease-out; /* Анимация выезда модалки */
+  animation: ${slideIn} 0.3s ease-out;
   position: fixed;
   top: 0;
   left: 0;
@@ -49,7 +69,7 @@ const Modal = styled.div`
   width: 100%;
 
   &.closing {
-    animation: ${slideDown} 0.4s ease-out;
+    animation: ${slideOut} 0.3s ease-out;
   }
 `;
 
@@ -82,11 +102,6 @@ const ModalTitleContainer = styled.div`
   margin-left: 1rem;
   flex-direction: column;
   justify-content: center;
-`;
-
-const ModalTitle = styled.h2`
-  font-size: 1.5rem;
-  font-weight: 700;
 `;
 
 const CloseButton = styled.button`
@@ -152,7 +167,7 @@ const Footer = styled.div`
 const QuantityControls = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
 `;
 
 const QuantityButton = styled.button`
@@ -161,7 +176,7 @@ const QuantityButton = styled.button`
   background-color: #ffffff;
   color: #333333;
   border: 1px solid #e0e0e0;
-  border-radius: 50%;
+  border-radius: 8px;
   font-size: 1.5rem;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -213,6 +228,7 @@ const ModalBody = styled.div`
 export default function ItemModal({ isOpen, onClose, item }) {
   const [selectedSize, setSelectedSize] = useState(item.sizes[0]);
   const [quantity, setQuantity] = useState(1);
+  const { addItemToCart } = useCart();
 
   const handleSizeChange = (size) => {
     setSelectedSize(size);
@@ -223,17 +239,14 @@ export default function ItemModal({ isOpen, onClose, item }) {
   };
 
   const handleAddToCart = () => {
-    console.log("Добавлено в корзину:", {
-      item,
-      size: selectedSize,
-      quantity,
-    });
+    addItemToCart(item, selectedSize, quantity);
     closeModal(); // Закрываем модалку после добавления
   };
 
   const closeModal = () => {
     document.getElementById("modal").classList.add("closing");
-    setTimeout(onClose, 350);
+    document.getElementById("modalOverlay").classList.add("closing");
+    setTimeout(onClose, 250);
   };
 
   // Отключаем скролл при открытии модального окна
@@ -250,13 +263,13 @@ export default function ItemModal({ isOpen, onClose, item }) {
   }, [isOpen]);
 
   return (
-    <ModalOverlay>
+    <ModalOverlay id="modalOverlay">
       <Modal id="modal">
         <ModalContent>
           <ModalHeader>
             <ModalImage src={selectedSize.image} alt={item.title} />
             <ModalTitleContainer>
-              <ModalTitle>{item.title}</ModalTitle>
+              <h2>{item.title}</h2>
             </ModalTitleContainer>
             <CloseButton onClick={closeModal}>&times;</CloseButton>
           </ModalHeader>

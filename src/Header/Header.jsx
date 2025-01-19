@@ -2,6 +2,7 @@ import { styled } from "styled-components";
 import Logo from "./Logo";
 import SearchIcon from "./SearchIcon";
 import CartIcon from "./CartIcon";
+import { useCart } from "../Cart/CartContext";
 
 const HeaderContainer = styled.header`
   top: 0;
@@ -30,21 +31,50 @@ const IconButton = styled.button`
   transition: color 0.3s;
 
   &:hover {
-    color: #007bff;
+    opacity: 0.8;
   }
 `;
 
-export default function Header({ onClick }) {
+const Badge = styled.span`
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #ee7203;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(50%, -50%);
+  pointer-events: none;
+`;
+
+const CartContainer = styled.div`
+  position: relative; /* Для позиционирования бейджа */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export default function Header({ onLogoClick, onCartClick }) {
+  const { cartItems } = useCart();
   return (
     <HeaderContainer>
       <IconButton>
         <SearchIcon />
       </IconButton>
-      <IconButton onClick={() => onClick(0)}>
+      <IconButton onClick={() => onLogoClick(0)}>
         <Logo />
       </IconButton>
-      <IconButton>
-        <CartIcon />
+      <IconButton onClick={onCartClick}>
+        <CartContainer>
+          <CartIcon visible={cartItems.length > 0} />
+          {cartItems.length > 0 && <Badge>{cartItems.length}</Badge>}
+        </CartContainer>
       </IconButton>
     </HeaderContainer>
   );

@@ -4,6 +4,7 @@ import CategoriesPanel from "./CategoriesPanel";
 import { useState, useEffect, useRef } from "react";
 import Category from "./Category";
 import ItemModal from "./ItemModal";
+import CartModal from "./Cart/CartModal";
 
 export default function App() {
   const [isReqLoading, setIsReqLoading] = useState(false); // состояние для отслеживания загрузки запроса к бд
@@ -2973,7 +2974,7 @@ export default function App() {
     };
   }, [items]); // запускаем эффект, когда меняются items
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const [itemOpened, setItemOpened] = useState({
     id: "id",
     title: "title",
@@ -2981,18 +2982,23 @@ export default function App() {
     decription: "description",
   });
 
-  const onModalClose = () => {
-    setIsModalOpen(false);
+  const onItemModalClose = () => {
+    setIsItemModalOpen(false);
   };
 
   const onItemClick = (item) => {
-    setIsModalOpen(true);
+    setIsItemModalOpen(true);
     setItemOpened(item);
   };
 
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+
   return (
     <>
-      <Header onClick={handleCategoryClick} />
+      <Header
+        onLogoClick={handleCategoryClick}
+        onCartClick={() => setIsCartModalOpen(true)}
+      />
       <Banner />
       <h1>Наше меню</h1>
       {isReqLoading && <div>Loading...</div>}
@@ -3017,11 +3023,17 @@ export default function App() {
           ))}
         </>
       )}
-      {isModalOpen && (
+      {isItemModalOpen && (
         <ItemModal
-          isOpen={isModalOpen}
-          onClose={onModalClose}
+          isOpen={isItemModalOpen}
+          onClose={onItemModalClose}
           item={itemOpened}
+        />
+      )}
+      {isCartModalOpen && (
+        <CartModal
+          isOpen={isCartModalOpen}
+          onClose={() => setIsCartModalOpen(false)}
         />
       )}
     </>
