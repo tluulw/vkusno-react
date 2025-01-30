@@ -168,7 +168,7 @@ const CheckoutButton = styled.button`
   }
 `;
 
-export default function CartModal({ onClose }) {
+export default function CartModal({ onClose, onCheckout }) {
   const {
     cartItems,
     clearCart,
@@ -237,7 +237,9 @@ export default function CartModal({ onClose }) {
       {/* Footer */}
       <CartFooter>
         <TotalPrice>Итого: {calculateTotal()} руб.</TotalPrice>
-        <CheckoutButton>Оформить заказ</CheckoutButton>
+        <CheckoutButton onClick={() => onCheckout(calculateTotal(), cartItems)}>
+          Оформить заказ
+        </CheckoutButton>
       </CartFooter>
     </CartModalWrapper>
   );
